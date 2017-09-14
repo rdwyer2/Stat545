@@ -2,7 +2,9 @@
 title: "Cm004"
 author: "Ryan"
 date: "9/14/2017"
-output: html_document
+output: 
+  html_document: 
+    keep_md: yes
 ---
 
 ```{r setup, include=FALSE}
