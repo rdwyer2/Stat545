@@ -1,0 +1,134 @@
+---
+title: "cm_010"
+author: "Ryan"
+date: "10/5/2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+```
+
+
+```{r}
+install.packages('devtools')
+library(devtools)
+install_github("JoeyBernhardt/singer")
+```
+
+Now we have the singer dataframes.
+
+```{r}
+library(singer)
+```
+
+```{r}
+data("locations")
+data("songs")
+```
+
+```{r}
+glimpse(songs)
+```
+
+```{r}
+glimpse(locations)
+```
+
+
+### Release and Year
+
+Produce df with all albums, artists, and year.
+
+```{r}
+relartyear <- inner_join(locations, songs, by = c("title", "artist_name")) %>% 
+  select(release, artist_name, year)
+```
+
+
+### Get the number of releases per year
+
+```{r}
+# My solution
+relyear <- full_join(songs, locations, by = c("title", "artist_name")) %>% 
+  select(release, artist_name, year) %>% 
+  group_by(year) %>% 
+  summarize(count = n())
+
+# his solution
+inner_join(songs, locations, by = "title") %>% 
+  count(year)
+
+rm(relartyear, relyear, songs)
+```
+
+
+## Reshaping
+
+
+```{r}
+data("singer_locations")
+glimpse(singer_locations)
+```
+
+
+```{r}
+hfd_y <- singer_locations %>% 
+  select(year, track_id, artist_hotttnesss, artist_familiarity, duration)
+```
+
+```{r}
+hfd_y %>% 
+  filter(year > 1900) %>% 
+  ggplot(aes(x = year, y = duration)) +
+  geom_point()
+```
+
+
+```{r}
+hfd_y_long <- hfd_y %>% 
+  gather(key = "Measure", value = "Units", artist_hotttnesss:duration)
+```
+
+
+```{r}
+hfd_y_long %>% 
+  filter(year > 1950) %>% 
+  ggplot(aes(x = year, y = Units)) +
+  geom_point() +
+  facet_wrap(~Measure, scales = "free_y") 
+```
+
+
+# cm_011 2017-10-10
+
+**Wide** dataframe
+
+```{r}
+hfd_wide <- hfd_y_long %>% 
+  spread(Measure, Units)
+```
+
+
+```{r}
+library(reshape2)
+```
+
+```{r}
+hfd_y <- singer_locations %>% 
+  select(year, artist_hotttnesss, artist_familiarity, duration)
+
+hfd_y_long <- hfd_y %>% 
+  gather(key = "Measure", value = "Units", artist_hotttnesss:duration)
+
+hfd_wide <- hfd_y_long %>% 
+  dcast(year ~ Measure, 
+        value.var = "Units",
+        fun.aggregate = mean, na.rm = TRUE)
+
+```
+
