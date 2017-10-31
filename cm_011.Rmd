@@ -1,0 +1,97 @@
+---
+title: "cm_011"
+author: "Ryan"
+date: "10/12/2017"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+```
+
+
+```{r}
+typeof(`%>%`)
+typeof(2)
+typeof(2.2)
+typeof(pi)
+typeof("hello")
+typeof(c("hi", "hello"))
+typeof(T)
+typeof(`mean`)
+```
+
+```{r}
+class(`mean`)
+```
+
+```{r}
+my_matrix <- matrix(c(1,2,3,4), nrow = 2, byrow = TRUE)
+library(singer)
+d <- singer_locations
+```
+
+Change one entry
+```{r}
+glimpse(singer_locations)
+d$year[1] <- factor(d$year[1])
+str(d$year)
+```
+
+```{r}
+read_csv()
+```
+
+```{r}
+library(forcats)
+```
+
+
+```{r}
+d <- d %>% 
+  mutate(artist_name_f = as_factor(artist_name))
+
+glimpse(d)
+```
+
+```{r}
+d <- d %>% 
+  mutate(artist_name_fb = factor(artist_name))
+
+glimpse(d)
+
+x <- c("a", "c", "b")
+as_factor(x)
+factor(x)
+```
+
+```{r}
+d %>% count(artist_name)
+summary(d$artist_name_f)
+
+d %>% 
+  mutate(top_an = fct_lump(artist_name_f, n = 10)) %>% 
+  count(top_an) %>% 
+  arrange( -n)
+```
+
+
+```{r}
+d <- d %>% 
+  mutate(city_factor = ifelse(is.na(city), "Missing_information", city),
+         as_factor(city_factor))
+
+glimpse(d)
+```
+
+```{r}
+d %>% 
+  mutate(top_cities = fct_lump(city_factor, 7)) %>%
+  count(top_cities)
+```
+
+Use forcats to cleanup city stuff
+```{r}
+
+```
+

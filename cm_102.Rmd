@@ -1,0 +1,104 @@
+---
+title: "cm_102"
+author: "Ryan"
+date: "10/26/2017"
+output: html_document
+---
+
+```{r}
+## get to know the functions mentioned above
+min(gapminder$lifeExp)
+## [1] 23.599
+max(gapminder$lifeExp)
+## [1] 82.603
+range(gapminder$lifeExp)
+## [1] 23.599 82.603
+
+## some natural solutions
+max(gapminder$lifeExp) - min(gapminder$lifeExp)
+## [1] 59.004
+with(gapminder, max(lifeExp) - min(lifeExp))
+## [1] 59.004
+range(gapminder$lifeExp)[2] - range(gapminder$lifeExp)[1]
+## [1] 59.004
+with(gapminder, range(lifeExp)[2] - range(lifeExp)[1])
+## [1] 59.004
+diff(range(gapminder$lifeExp))
+## [1] 59.004
+```
+
+
+```{r}
+max_minus_min <- function(x) max(x) - min(x)
+max_minus_min(gapminder$lifeExp)
+```
+
+```{r}
+max_minus_min(1:10)
+```
+
+```{r}
+mmm2 <- function(x) {
+  if(!is.numeric(x)) {
+    stop('I am so sorry, but this function only works for numeric input!\n',
+         'You have provided an object of class: ', class(x)[1])
+  }
+  max(x) - min(x)
+}
+```
+
+# Problem
+
+```{r}
+mod_ten <- function(x) {
+  if(!is.numeric(x)) {
+    stop('You provided an object of class: ', class(x)[1], ' but I need numeric input.')
+  }
+  x %% 10
+}
+
+mod_ten("pie")
+```
+
+
+```{r}
+mod_x <- function(value, divisor = 10) {
+  if(!is.numeric(value)) {
+    stop('You provided an object of class: ', class(x)[1], ' but I need numeric input.')
+  }
+  stopifnot(!is.integer(divisor))
+  return(list(Int = value %\% divisor, Rem = value %% divisor))
+}
+
+mod_x(101, 10)
+
+```
+
+
+# Derek Solution
+
+```{r}
+mod_x <- function(value, divisor = 10) {
+  stopifnot(!is.integer(divisor))
+  int <- value %/% divisor
+  mod <- value %% divisor
+  
+  output <- list(quotient = int, remainder = mod)
+  return(output)
+}
+
+mod_x(101)
+
+```
+
+
+```{r}
+qdiff4 <- function(x, probs = c(0, 1)) {
+  stopifnot(is.numeric(x))
+  the_quantiles <- quantile(x, probs)
+  return(max(the_quantiles) - min(the_quantiles))
+}
+```
+
+
+

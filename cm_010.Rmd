@@ -15,7 +15,6 @@ library(tidyverse)
 
 
 ```{r}
-install.packages('devtools')
 library(devtools)
 install_github("JoeyBernhardt/singer")
 ```
@@ -96,7 +95,7 @@ hfd_y_long <- hfd_y %>%
 
 
 ```{r}
-hfd_y_long %>% 
+plot <- hfd_y_long %>% 
   filter(year > 1950) %>% 
   ggplot(aes(x = year, y = Units)) +
   geom_point() +
@@ -131,4 +130,15 @@ hfd_wide <- hfd_y_long %>%
         fun.aggregate = mean, na.rm = TRUE)
 
 ```
+
+
+```{r}
+typeof(plot)
+class(plot)
+typeof(`%>%`)
+class(`%>%`)
+
+`+`(1, 3)
+```
+
 

@@ -1,0 +1,175 @@
+---
+title: "cm_101"
+author: "Ryan"
+date: "10/24/2017"
+output: html_document
+---
+
+# R for strings
+
+```{r}
+my_string <- "Surrounded by quotes."
+my_string2 <- 'This is another string containing "double quotes". That is cool.'
+my_string2
+my_string3 <- "A slash \ "
+my_string3
+
+
+```
+
+### Homework
+
+How do I string a single slash?
+
+```{r}
+my_string4 <- `my_string`
+my_string5 <- 'my_string'
+my_string6 <- "my_string"
+my_string4 == my_string5
+my_string5 == my_string6
+
+my_string4
+```
+
+```{r}
+library(singer)
+data(singer_locations)
+singer_locations
+places <- unique(singer_locations$city)
+str(places)
+nchar(c("City", "double", "a very long string", "a b "))
+nchar(c("", NA, " ", "    ", "\t"))
+```
+
+# Tools
+
+```{r}
+library(tidyverse)
+library(stringr)
+library(glue)
+```
+
+## glueing `glue()`
+
+```{r}
+My_name <- "Giulio"
+My_age <- 109
+My_color <- "Blue"
+
+glue("My name is {My_name}. ", "My age two years ago was {My_age - 2}.")
+
+# Paste alternative. 0 means no spaces?
+paste0("My name is ",My_name, ". My age two years ago was ", My_age - 2)
+```
+
+indentation
+```{r}
+glue("
+My name is
+    {My_name}")
+```
+
+
+```{r}
+glue("
+My name is
+    {My_name} and {My_age}",
+My_name = "Other Name", 
+My_age = 10)
+```
+
+
+## Challenge
+
+Phrase : Today is Wednesday, October 29, 1986 and the sun shines
+
+Sys.Date()
+glue()
+```{r}
+glue("Today is {Today_date} and the sun shines.",
+     Today_date = Sys.Date())
+```
+
+```{r}
+phrase <- "Today is {Today_date} and the sun shines."
+
+glue(phrase,
+     Today_date = format(Sys.Date(), "%A, %B %d, %Y"))
+```
+
+
+`glue_data`
+
+```{r}
+singer_locations %>% 
+  glue_data("{artist_name} is from {city}." %>% 
+      head())
+```
+
+### Stringr
+
+```{r}
+getNamespaceExports("stringr") %>% 
+  str_view("str_")
+```
+
+```{r}
+getNamespaceExports("stringr") %>% 
+  str_subset("str_")
+```
+
+### Challenge
+
+Let's get all places containing string "york". 
+
+```{r}
+places %>% 
+  str_to_lower() %>% 
+  str_subset("york")
+```
+
+### Regular Expressions
+
+```{r}
+places %>% 
+  str_subset("[Yy]ork")
+```
+
+```{r}
+places %>% 
+  str_subset(coll("york", ignore_case = T))
+```
+
+`^` means it is the start of the string. `$` means it is the end of the string.
+```{r}
+places %>% 
+  str_subset("York$")
+
+places %>% 
+  str_subset("^York")
+```
+
+### Challenge
+
+```{r}
+"[:digit:]"
+
+places %>% 
+  str_subset("[:digit:]")
+
+places %>% 
+  str_subset("B.a")
+
+# `?a` means 0 or 1 match for the a
+places %>% 
+  str_subset("B.a?")
+
+# * means 0, 1, or more
+places %>% 
+  str_subset("B.a*")
+
+places %>% 
+  str_subset("[Nn]ew [Yy]ork")
+
+```
+
