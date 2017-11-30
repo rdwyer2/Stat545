@@ -1,0 +1,13 @@
+---
+title: "cm_105. Automating a data analysis pipeline"
+author: "Ryan"
+date: "November 7, 2017"
+output: html_document
+---
+
+```{r}
+devtools::install_github("richfitz/remake")
+library(remake)
+```
+
+

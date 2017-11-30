@@ -1,0 +1,29 @@
+---
+title: "cm_107"
+author: "Ryan"
+date: "11/14/2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+library(shiny)
+```
+
+```{r}
+runExample("01_hello")
+```
+
+```{r}
+my_ui <- fluidPage()
+my_server <- function(input, output) {
+  
+}
+
+sinyApp(ui = my_ui, server = my_server)
+```
+

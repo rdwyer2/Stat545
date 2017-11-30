@@ -1,0 +1,165 @@
+---
+title: "cm_111"
+author: "Ryan"
+date: "11/28/2017"
+output: html_document
+---
+```{r}
+library(tidyverse)
+library(magrittr)
+library(purr)
+library(glue)
+library(stringr)
+
+```
+
+
+```{r}
+library(xml2)
+library(rvest)
+
+```
+
+
+The information we want is here:
+
+```{r}
+my_url <- "https://www.musixmatch.com/artist/Straight-Line-Stitch#"
+
+page_title <- read_html(my_url)
+```
+
+What's in `page_title` now?
+
+rvest comes into play
+
+```{r}
+page_title %>% 
+  html_nodes(css = ".title") %>% 
+  html_text()
+```
+
+```{r}
+sls_lyrics <- data_frame(Band = "Straight Line Stitch",
+                         Title = page_title %>% 
+                          html_nodes(css = ".title") %>% 
+                          html_text(),
+                         Link = glue("https://www.musixmatch.com/lyrics/{Band}/{Title}") %>% 
+                           str_replace_all(" ", "-"))
+
+sls_lyrics$Link[1]
+```
+
+
+```{r}
+sls_lyrics %<>%
+  mutate(Lyrics = map(Link, read_html))
+```
+
+What do we have now?
+
+```{r}
+sls_lyrics %>% View()
+```
+
+```{r}
+get_lyrics <- function(lyr_link){
+  lyr_link %>% 
+    read_html() %>% 
+    html_nodes(css = ".mxm-lyrics__content ") %>% 
+    html_text() %>% 
+    collapse(sep = "\n") %>% 
+    return()
+}
+```
+
+```{r}
+sls_lyrics$Link[1] %>% 
+  get_lyrics()
+```
+
+
+```{r}
+sls_lyrics %<>%
+  mutate(Lyrics = map_chr(Link, get_lyrics))
+```
+
+
+## Challenge
+
+```{r}
+my_url <- "https://www.musixmatch.com/artist/Angel-Haze"
+
+page_title <- read_html(my_url)
+```
+
+```{r}
+page_title %>% 
+  html_nodes(css = ".title") %>% 
+  html_text()
+```
+
+```{r}
+sls_lyrics <- data_frame(Band = "Angel Haze",
+                         Title = page_title %>% 
+                          html_nodes(css = ".title") %>% 
+                          html_text(),
+                         Link = glue("https://www.musixmatch.com/lyrics/{Band}/{Title}") %>% 
+                           str_replace_all(" ", "-"))
+
+sls_lyrics$Link[1]
+```
+
+```{r}
+get_lyrics <- function(lyr_link){
+  lyr_link %>% 
+    read_html() %>% 
+    html_nodes(css = ".mxm-lyrics__content ") %>% 
+    html_text() %>% 
+    collapse(sep = "\n") %>% 
+    return()
+}
+```
+
+```{r}
+sls_lyrics %<>%
+  mutate(Lyrics = map_chr(Link, get_lyrics))
+```
+
+
+## Answer
+
+this answer is not complete. Couldn't follow Gulio. 
+```{r}
+my_url <- "https://www.musixmatch.com/artist/Angel-Haze"
+
+page_title <- read_html(my_url)
+```
+
+```{r}
+page_title %>% 
+  html_nodes(css = ".title") %>% 
+  html_text()
+```
+
+```{r}
+AH_lyrics <- data_frame(Band = "Angel Haze",
+                         Title = page_title %>% 
+                          read_html() %>% 
+                          html_nodes(css = ".title") %>% 
+                          html_text(),
+                         Link = glue("https://www.musixmatch.com/lyrics/{Band}") %>%
+                          read_html() %>% 
+                          html_attr("href") %>% 
+                           str_replace_all(" ", "-"))
+
+sls_lyrics$Link[1]
+```
+
+```{r}
+"https://www.musixmatch.com/artist/Angel-Haze" %>% 
+  read_html() %>% 
+  html_nodes(css = ".title") %>% 
+  html_attr("href")
+```
+
